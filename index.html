@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>EaselJS demo: bubbling events</title>
+    <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+    <script>
+        function init() {
+            stage = new createjs.Stage("demoCanvas");
+            stage.name = name;
+            let container = new createjs.Container();//绘制外部容器
+            stage.addChild(container);
+            let image = new Image();
+            image.src = "img/timg.png";
+            image.onload = (event) => {
+                handlerImageLoad(event, 150, 250)            
+};
+            let canvas = document.getElementById('demoCanvas');
+            function handlerImageLoad(event, x, y,sx,sy) {
+                let bitmap = new createjs.Bitmap(event.target);
+                bitmap.x = x;
+                bitmap.y = y;
+                bitmap.scaleX=sx||1;
+                bitmap.scaleY=sy||1;
+                stage.addChild(bitmap);
+                stage.update();
+            }
+
+            function createLabel(color, x, y, width, height, radius, text, callback) {
+                let queBack = new createjs.Shape();
+                queBack.name = "queBack";
+                queBack.graphics.beginFill(color).drawRoundRect(x, y, width, height, radius);
+
+                let queText = new createjs.Text(text, "bold 24px Arial", "#FFFFFF");
+                queText.name = "queText";
+                queText.textAlign = "center";
+                queText.textBaseline = "middle";
+                queText.x = x + width / 2;
+                queText.y = y + 25;
+                let label = new createjs.Container();
+                label.name = "label";
+                label.addChild(queBack, queText);
+                stage.addChild(label);
+                label.on("click", function (evt) {
+                    callback();
+                })
+            }
+            createLabel("grey", 100, 100, 800, 60, 10, "An egg __ a chair");
+            createLabel("#48c0a3", 600, 400, 300, 60, 10, "A: on", function () {
+                createLabel("grey", 100, 100, 800, 60, 10, "An egg on a chair");
+                let image2 = new Image();
+                image2.src = "img/egg.png";
+                image2.onload = (event) => { handlerImageLoad(event, 250, 370,0.3,0.3) };
+                let image3 =new Image();
+                image3.src = "img/right.png";
+                image3.onload = (event) => { handlerImageLoad(event, 850, 380,0.7,0.7) };
+                stage.update();
+
+            });
+            createLabel("#48c0a3", 600, 500, 300, 60, 10, "B: in", function () {
+                let image3 = new Image();
+                image3.src = "img/wrong.png";
+                image3.onload = (event) => { handlerImageLoad(event, 850, 520,0.6,0.6) };
+                stage.update();
+            });
+            stage.update();
+        };
+    </script>
+</head>
+
+<body onload="init();">
+    <canvas id="demoCanvas" width="1000" height="1000">
+    </canvas>
+</body>
+
+</html>
